@@ -1,0 +1,149 @@
+openapi: 3.0.0
+info:
+  title: Car Management API
+  version: 0.0.1
+servers:
+  - description: Mock Server
+    url: https://mock.medium.com
+  - description: "Staging Server"
+    url: https://staging.medium.com
+  - description: "Beta Server"
+    url: https://beta.medium.com
+  - description: "Production Server"
+    url: https://medium.com
+tags:
+  - name: Car
+    description: Contain every operation about Car Resource
+paths:
+  /cars/add:
+    post:
+      operationId: createCar
+      tags:
+        - Car
+      requestBody:
+        $ref: "#/components/requestBodies/PostRequest"
+      responses:
+        "201":
+          $ref: "#/components/responses/PostResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+  /cars/{id}:
+    put:
+      operationId: updateCar
+      tags:
+        - Car
+      parameters:
+        - in: body
+          name: id
+          description: The id of the Car
+          required: true
+          schema:
+            type: number
+            example: 1
+      requestBody:
+        $ref: "#/components/requestBodies/PostRequest"
+      responses:
+        "200":
+          $ref: "#/components/responses/PostResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+        "403":
+          $ref: "#/components/responses/ForbiddenResponse"
+components:
+  requestBodies:
+    PostRequest:
+      description: Payload for add a Car
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              size_id:
+                type: number
+                example: 1
+              name:
+                type: string
+                example: Jeep
+              rentPerDay:
+                type: number
+                example: 500000
+              photo:
+                type: string
+                example: jeep.jpg
+  responses:
+    ForbiddenResponse:
+      description: Response when accessing protected endpoint with access but sufficient access
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: FAIL
+              data:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: "FORBIDDEN"
+                  message:
+                    type: string
+                    example: "Invalid access level"
+    UnauthorizedResponse:
+      description: Response when accessing protected endpoint without access
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: FAIL
+              data:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: "UNAUTHORIZED"
+                  message:
+                    type: string
+                    example: "Access is not granted"
+    PostResponse:
+      description: Response when create and update car.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: OK
+              data:
+                $ref: "#/components/schemas/Car"
+  schemas:
+    Car:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        size_id:
+          type: number
+          example: 1
+        name:
+          type: string
+          example: Jeep
+        rentPerDay:
+          type: string
+          example: 500000
+        photo:
+          type: string
+          example: jeep.jpg
+        createdAt:
+          type: string
+          example: "2021-07-30 17:00:00 +0700"
+        updatedAt:
+          type: string
+          example: "2021-07-30 17:00:00 +0700"
